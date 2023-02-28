@@ -47,7 +47,7 @@ public class RemoveCmd extends MusicCommand
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         if(handler.getQueue().isEmpty())
         {
-            event.replyError("There is nothing in the queue!");
+            event.replyError("There is nothing in the queue you fucking retard!");
             return;
         }
         if(event.getArgs().equalsIgnoreCase("all"))
@@ -94,7 +94,7 @@ public class RemoveCmd extends MusicCommand
         }
         else
         {
-            event.replyError("You cannot remove **"+qt.getTrack().getInfo().title+"** because you didn't add it!");
+            event.replyError("You cannot remove **"+qt.getTrack().getInfo().title+"** because you didn't add it retard!");
         }
     }
 }
