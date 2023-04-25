@@ -2,16 +2,15 @@ package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jdautilities.command.impl.CommandClientImpl;
 import com.jagrosh.jmusicbot.Bot;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.internal.utils.Checks;
+import net.dv8tion.jda.api.entities.*;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.function.Consumer;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.util.Arrays;
 
 public class BirdCmd extends Command {
 
@@ -20,42 +19,49 @@ public class BirdCmd extends Command {
     private String message = "https://www.meme-arsenal.com/memes/18934dc45129ade6279df13fe733e412.jpg";
 
     public BirdCmd(Bot bot) {
-        this.name = "birb";
+        this.name = "getSite";
         this.help = "birbs?!?!?!?!?!?!";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
 
+private String getWebsite(String urlString) throws IOException {
+    URL url = new URL(urlString);
+StringBuilder  stringBuilder = new StringBuilder();
+
+    // open a connection to the URL
+    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    connection.setRequestMethod("GET");
+
+    // read the response from the connection
+    InputStream inputStream = connection.getInputStream();
+    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+    String line;
+    while ((line = reader.readLine()) != null) {
+        stringBuilder.append(line);
+    }
+
+
+    // close the connection
+    connection.disconnect();
+    return stringBuilder.toString();
+}
 
     @Override
     protected void execute(CommandEvent event) {
 
-        System.out.println(event.getGuild().getMemberCount());
+        TextChannel channelToTest = event.getGuild().getTextChannelsByName("spam-requiem", true).get(0);
 
-        System.out.println(event.getGuild().getMembers().size());
-    }
+        try {
 
+           // channelToTest.sendMessage(this.getWebsite(event.getArgs()));
 
-
-    public static ArrayList<String> splitMessage(String stringtoSend) {
-        ArrayList<String> msgs = new ArrayList<>();
-        if (stringtoSend != null) {
-            stringtoSend = stringtoSend.replace("@everyone", "@\u0435veryone").replace("@here", "@h\u0435re").trim();
-            while (stringtoSend.length() > 2000) {
-                int leeway = 2000 - (stringtoSend.length() % 2000);
-                int index = stringtoSend.lastIndexOf("\n", 2000);
-                if (index < leeway)
-                    index = stringtoSend.lastIndexOf(" ", 2000);
-                if (index < leeway)
-                    index = 2000;
-                String temp = stringtoSend.substring(0, index).trim();
-                if (!temp.equals(""))
-                    msgs.add(temp);
-                stringtoSend = stringtoSend.substring(index).trim();
-            }
-            if (!stringtoSend.equals(""))
-                msgs.add(stringtoSend);
+            event.reply(this.getWebsite(event.getArgs()));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return msgs;
     }
+
+
+
 
 }

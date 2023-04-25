@@ -32,11 +32,12 @@ import java.util.Arrays;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author John Grosh (jagrosh)
@@ -44,12 +45,13 @@ import org.slf4j.LoggerFactory;
 public class JMusicBot 
 {
     public final static Logger LOG = LoggerFactory.getLogger(JMusicBot.class);
-    public final static Permission[] RECOMMENDED_PERMS = {Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
-
+    public final static Permission[] RECOMMENDED_PERMS = {Permission.VOICE_DEAF_OTHERS, Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION, Permission.MANAGE_SERVER, Permission.BAN_MEMBERS,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
-                                Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
+                                Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE, Permission.MANAGE_PERMISSIONS};
+
+    
     public final static GatewayIntent[] INTENTS = {GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
-            GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS};
+            GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_PRESENCES};
     
     /**
      * @param args the command line arguments
@@ -121,6 +123,9 @@ public class JMusicBot
                         new YongleCmd(bot),
                         new BirdCmd(bot),
                         new PenisCmd(bot),
+                        new AnnouncementCmd(bot),
+                        new WeatherCmd(bot),
+                        new DeafenCmd(bot),
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),
@@ -191,6 +196,21 @@ public class JMusicBot
                     .setBulkDeleteSplittingEnabled(true)
                     .build();
             bot.setJDA(jda);
+
+
+            Message getTrolledLol = new CustomHarisMessage();
+
+            MessageReceivedEvent messageReceivedEvent = new MessageReceivedEvent(bot.getJDA(), 20, getTrolledLol);
+
+
+            WeatherInformer weatherInformer = new WeatherInformer(bot);
+
+
+
+            weatherInformer.execute(messageReceivedEvent, jda);
+
+
+
         }
         catch (LoginException ex)
         {
@@ -205,5 +225,16 @@ public class JMusicBot
                     + "invalid: " + ex + "\nConfig Location: " + config.getConfigLocation());
             System.exit(1);
         }
+
+
+
+
     }
+
+
+
+
+
+
+
 }

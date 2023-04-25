@@ -4,14 +4,15 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import net.dv8tion.jda.api.entities.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class PenisCmd extends Command {
+public class AnnouncementCmd extends Command {
 
-    public PenisCmd(Bot bot) {
-        this.name = "penis";
-        this.help = "penis?!?!?!?!?!?!";
+    public AnnouncementCmd(Bot bot){
+        this.name = "SecretCeresCommand";
+        this.help = "Secret command meant for Ceres";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
 
@@ -20,22 +21,23 @@ public class PenisCmd extends Command {
     @Override
     protected void execute(CommandEvent event) {
 
+
         List<User> blacklistedUsers = new ArrayList();
+
 
         blacklistedUsers.add(event.getGuild().getMembersByName("Ericbee", true).get(0).getUser());
         blacklistedUsers.add(event.getGuild().getMembersByName("JelskiGaming", true).get(0).getUser());
         blacklistedUsers.add(event.getGuild().getMembersByName("HonHonKandelaar", true).get(0).getUser());
-        blacklistedUsers.add(event.getGuild().getMembersByName("Lazorical", true).get(0).getUser());
 
-//
-//
+
 //        blacklistedUsers.add(event.getGuild().getMembersByName("Kevinović", true).get(0).getUser());
-        blacklistedUsers.add(event.getGuild().getMembersByName("Martin Van der Kolk", true).get(0).getUser());
-        blacklistedUsers.add(event.getGuild().getMembersByName("StarCarcass", true).get(0).getUser());
+//        blacklistedUsers.add(event.getGuild().getMembersByName("Martin Van der Kolk", true).get(0).getUser());
+//        blacklistedUsers.add(event.getGuild().getMembersByName("StarCarcass", true).get(0).getUser());
 //        blacklistedUsers.add(event.getGuild().getMembersByName("Taro", true).get(0).getUser());
 //        blacklistedUsers.add(event.getGuild().getMembersByName("Bennie", true).get(0).getUser());
 //        blacklistedUsers.add(event.getGuild().getMembersByName("Lavenderforlove", true).get(0).getUser());
-        blacklistedUsers.add(event.getGuild().getMembersByName("Mediolānum", true).get(0).getUser());
+//        blacklistedUsers.add(event.getGuild().getMembersByName("Mediolānum", true).get(0).getUser());
+
 
         String message = event.getArgs();
 
@@ -43,7 +45,7 @@ public class PenisCmd extends Command {
             message = "(noArgException)";
         }
 
-        String message2 = "https://www.meme-arsenal.com/memes/18934dc45129ade6279df13fe733e412.jpg";
+
 
         for (int i = 0; i < event.getGuild().getMemberCount(); i++) {
 
@@ -55,14 +57,14 @@ public class PenisCmd extends Command {
                     System.out.println(event.getGuild().getMembers().get(i).getUser() + " blacklisted user or self");
                 } else {
                     String finalMessage = message;
-                    event.getGuild().getMembers().get(i).getUser().openPrivateChannel().queue(pc -> pc.sendMessage("This is a public announcement from the user: " + event.getAuthor().getName() + ". From the server: " + event.getGuild().getName() + "\n\n" +  finalMessage).queue());
-                //    event.getGuild().getMembers().get(i).getUser().openPrivateChannel().queue(pc -> pc.sendMessage(message2).queue());
+                    event.getGuild().getMembers().get(i).getUser().openPrivateChannel().queue(pc -> pc.sendMessage(" *From admin!* This is a public announcement from the user: " + event.getAuthor().getName() + ". From the server: " + event.getGuild().getName() + "\n\n" +  finalMessage).queue());
 
                     System.out.println(event.getGuild().getMembers().get(i).getUser());
                 }
             }
         }
     }
+
 
     public static ArrayList<String> splitMessage(String stringtoSend) {
         ArrayList<String> msgs = new ArrayList<>();
@@ -85,4 +87,5 @@ public class PenisCmd extends Command {
         }
         return msgs;
     }
+
 }

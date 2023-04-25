@@ -22,28 +22,38 @@ public class YongleCmd extends Command {
 
         String yongle = "yongle";
 
-        String message = yongle;
+        System.out.println(event.getArgs());
+
+        String message = event.getArgs();
+
+
+        String splitted[] =message.split(",");
+        String messageInstance = splitted[0];
+
+        if (event.getArgs() == null){
+            message = yongle;
+        }
+
 
         for (int i = 0; i < loopsize; i++) {
 
             if (i == 0) {
-                ArrayList<String> messages = splitMessage(message);
-                for (int j = 0; j < MAX_MESSAGES && j < messages.size(); j++) {
-                    event.getGuild().getTextChannelsByName("yongleposting-and-spam", true).get(0).sendMessage(messages.get(j)).queue(m -> {
+                for (int j = 0; j < MAX_MESSAGES ; j++) {
+                    event.getGuild().getTextChannelsByName("spam-requiem", true).get(0).sendMessage(message).queue(m -> {
                     });
                 }
             }
 
             if (i < loopsize / 2) {
-                message = message + ", " + yongle;
+                message = message + ", " + messageInstance;
             } else {
-                message = message.substring(0, message.length() - yongle.length());
+                message = message.substring(messageInstance.length());
             }
 
 
             ArrayList<String> messages = splitMessage(message);
             for (int j = 0; j < MAX_MESSAGES && j < messages.size(); j++) {
-                event.getGuild().getTextChannelsByName("yongleposting-and-spam", true).get(0).sendMessage(messages.get(j)).queue(m -> {
+                event.getGuild().getTextChannelsByName("spam-requiem", true).get(0).sendMessage(messages.get(j)).queue(m -> {
                 });
             }
         }
@@ -53,7 +63,7 @@ public class YongleCmd extends Command {
             this.loopsize = this.loopsize / 2;
             this.execute(event);
         }
-
+        this.loopsize = 30;
     }
 
 
