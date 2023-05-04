@@ -42,8 +42,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author John Grosh (jagrosh)
  */
-public class JMusicBot 
-{
+public class JMusicBot {
+
     public final static Logger LOG = LoggerFactory.getLogger(JMusicBot.class);
     public final static Permission[] RECOMMENDED_PERMS = {Permission.VOICE_DEAF_OTHERS, Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION, Permission.MANAGE_SERVER, Permission.BAN_MEMBERS,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
@@ -69,8 +69,7 @@ public class JMusicBot
         startBot();
     }
     
-    private static void startBot()
-    {
+    private static void startBot() {
         // create prompt to handle startup
         Prompt prompt = new Prompt("JMusicBot");
         
@@ -225,16 +224,5 @@ public class JMusicBot
                     + "invalid: " + ex + "\nConfig Location: " + config.getConfigLocation());
             System.exit(1);
         }
-
-
-
-
     }
-
-
-
-
-
-
-
 }
