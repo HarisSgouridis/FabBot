@@ -121,7 +121,6 @@ public class WeatherInformer {
                             e.printStackTrace();
                         }
 
-
                         String trimmedJson = rawJson.substring(15);
                         trimmedJson = trimmedJson.substring(0, trimmedJson.length() - 2);
 
