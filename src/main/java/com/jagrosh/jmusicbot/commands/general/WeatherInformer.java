@@ -2,7 +2,6 @@ package com.jagrosh.jmusicbot.commands.general;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
@@ -15,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -91,71 +91,84 @@ public class WeatherInformer {
     public void execute(MessageReceivedEvent event, JDA jda) {
 
 
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            public void run() {
 
-                biggestDayDiffrence = maximumTemp - minimumTemp;
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                public void run() {
 
-                String rawJson = null;
-                try {
-                    rawJson = getWebsite("https://weerlive.nl/api/json-data-10min.php?key=demo&locatie=Amsterdam");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                     int minute = LocalTime.now().getMinute();
+                     int hour = LocalTime.now().getHour();
+                     int second = LocalTime.now().getSecond();
 
+                     if (hour == 0 && minute == 0){
+                         minimumTemp = 0;
+                         maximumTemp = 0;
 
-                String trimmedJson = rawJson.substring(15);
-                trimmedJson = trimmedJson.substring(0, trimmedJson.length() - 2);
+                         System.out.println("Reset the values succesfully!");
+                     }
 
+                    if (minute == 10 || minute == 20 || minute == 30 || minute == 40 || minute == 50 || minute == 0) {
 
-                parseJson(trimmedJson);
+                        System.out.println("Time is right!");
+                        System.out.println(minute);
 
-                if (temperature < minimumTemp || minimumTemp == 0.123456789) {
-                    minimumTemp = temperature;
-                }
+                        biggestDayDiffrence = maximumTemp - minimumTemp;
 
-                if (temperature > maximumTemp || maximumTemp == 0.123456789) {
-                    maximumTemp = temperature;
-                }
-
-                for (int i = 1; i < jda.getGuilds().size(); i++) {
-
-                    try {
-
-
-                        MessageHistory history = MessageHistory.getHistoryFromBeginning(jda.getGuilds().get(i).getTextChannelsByName("Weather-channel", true).get(0)).complete();
-                        List<Message> mess = history.getRetrievedHistory();
-                        for (Message m : mess) {
-                            m.delete().queue();
+                        String rawJson = null;
+                        try {
+                            rawJson = getWebsite("https://weerlive.nl/api/json-data-10min.php?key=demo&locatie=Amsterdam");
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
 
 
-                        if (alarmtext.equals("")) {
-                            jda.getGuilds().get(i).getTextChannelsByName("weather-channel", true).get(0).sendMessage("Hey" + "!\n\n" + "Location: " + location + "\n" + "temperature: " + temperature + "°C\n" + "Current wind direction: " + winddirection + "\nKind of weather: " + kindOfWeather + ": " + "\n\nExpected weather: " + expectedWeather + "\n\nTimestamp: " +
-                                    time).queue();
-                        } else {
-                            jda.getGuilds().get(i).getTextChannelsByName("weather-channel", true).get(0).sendMessage("Hey" + "!\n\n" + "Location: " + location + "\n" + "temperature: " + temperature + "°C\n" + "Current wind direction: " + winddirection + "\nKind of weather: " + kindOfWeather + "\n\nImportant weather notice!: \n" + alarmtext + "\n\nExpected weather: " + expectedWeather + "\n\nTimestamp: " +
-                                    time).queue();
+                        String trimmedJson = rawJson.substring(15);
+                        trimmedJson = trimmedJson.substring(0, trimmedJson.length() - 2);
+
+
+                        parseJson(trimmedJson);
+
+                        if (temperature < minimumTemp || minimumTemp == 0.123456789) {
+                            minimumTemp = temperature;
                         }
 
-                        jda.getGuilds().get(i).getTextChannelsByName("weather-channel", true).get(0).sendMessage("Minimum temperature of the day: " + minimumTemp + "\n Maximum temperature of the day: " + maximumTemp + "\n temperature spread of the day: " + biggestDayDiffrence).queue();
+                        if (temperature > maximumTemp || maximumTemp == 0.123456789) {
+                            maximumTemp = temperature;
+                        }
+
+                        for (int i = 1; i < jda.getGuilds().size(); i++) {
+
+                            try {
 
 
-                        System.out.println(minimumTemp);
-                        System.out.println(temperature);
+                                MessageHistory history = MessageHistory.getHistoryFromBeginning(jda.getGuilds().get(i).getTextChannelsByName("Weather-channel", true).get(0)).complete();
+                                List<Message> mess = history.getRetrievedHistory();
+                                for (Message m : mess) {
+                                    m.delete().queue();
+                                }
 
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                                if (alarmtext.equals("")) {
+                                    jda.getGuilds().get(i).getTextChannelsByName("weather-channel", true).get(0).sendMessage("Hey" + "!\n\n" + "Location: " + location + "\n" + "temperature: " + temperature + "°C\n" + "Current wind direction: " + winddirection + "\nKind of weather: " + kindOfWeather + ": " + "\n\nExpected weather: " + expectedWeather + "\n\nTimestamp: " +
+                                            time).queue();
+                                } else {
+                                    jda.getGuilds().get(i).getTextChannelsByName("weather-channel", true).get(0).sendMessage("Hey" + "!\n\n" + "Location: " + location + "\n" + "temperature: " + temperature + "°C\n" + "Current wind direction: " + winddirection + "\nKind of weather: " + kindOfWeather + "\n\nImportant weather notice!: \n" + alarmtext + "\n\nExpected weather: " + expectedWeather + "\n\nTimestamp: " +
+                                            time).queue();
+                                }
+
+                                jda.getGuilds().get(i).getTextChannelsByName("weather-channel", true).get(0).sendMessage("Minimum temperature of the day: " + minimumTemp + "\n Maximum temperature of the day: " + maximumTemp + "\n temperature spread of the day: " + biggestDayDiffrence).queue();
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                     }
                 }
+            }, 0, 5000); // Run every 20 seconds (20,000 milliseconds)
 
 
-            }
-        }, 0, 20000); // Run every 10 seconds (10,000 milliseconds)
-
-
+        }
     }
 
-}
