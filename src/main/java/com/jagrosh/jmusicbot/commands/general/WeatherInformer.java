@@ -101,16 +101,17 @@ public class WeatherInformer {
                      int second = LocalTime.now().getSecond();
 
                      if (hour == 0 && minute == 0){
-                         minimumTemp = 0;
-                         maximumTemp = 0;
+                         minimumTemp = temperature;
+                         maximumTemp = temperature;
 
                          System.out.println("Reset the values succesfully!");
                      }
 
-                    if (minute == 10 || minute == 20 || minute == 30 || minute == 40 || minute == 50 || minute == 0) {
+                    if ((minute == 14 || minute == 24 || minute == 34 || minute == 44 || minute == 54 || minute == 4) && second <= 5) {
 
                         System.out.println("Time is right!");
                         System.out.println(minute);
+                        System.out.println(second);
 
                         biggestDayDiffrence = maximumTemp - minimumTemp;
 
@@ -165,7 +166,7 @@ public class WeatherInformer {
 
                     }
                 }
-            }, 0, 5000); // Run every 20 seconds (20,000 milliseconds)
+            }, 0, 5000); // Run every 5 seconds (5000 milliseconds)
 
 
         }
