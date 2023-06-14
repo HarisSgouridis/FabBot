@@ -65,7 +65,6 @@ public class WeatherInformer {
             stringBuilder.append(line);
         }
 
-
         // close the connection
         connection.disconnect();
         return stringBuilder.toString();

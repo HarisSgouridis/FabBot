@@ -12,7 +12,6 @@ public class TemperatureInstance implements  Serializable {
     private String expectedWeather;
     private String kindOfWeather;
 
-
     public TemperatureInstance(String location, String time, double temperature, String winddirection, String alarmtext, String expectedWeather, String kindOfWeather) {
         this.location = location;
         this.time = time;
@@ -22,7 +21,6 @@ public class TemperatureInstance implements  Serializable {
         this.expectedWeather = expectedWeather;
         this.kindOfWeather = kindOfWeather;
     }
-
 
     public String getLocation() {
         return location;

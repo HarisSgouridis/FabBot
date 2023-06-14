@@ -16,10 +16,6 @@ public abstract class Mongo {
     protected MongoClient mongoClient;
     protected MongoDatabase mongoDatabase;
 
-
-    /**
-     * Verbind direct met de server als dit object wordt aangemaakt
-     */
     public Mongo() {
         connect();
     }
@@ -44,11 +40,6 @@ public abstract class Mongo {
         }
     }
 
-
-    /**
-     * Selecteer de juiste collection
-     * @param collection
-     */
     public void selectedCollection(String collection) {
         this.collection = mongoDatabase.getCollection(collection);
     }
