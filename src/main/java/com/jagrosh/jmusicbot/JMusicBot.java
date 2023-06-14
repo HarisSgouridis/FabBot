@@ -50,6 +50,11 @@ import java.util.Arrays;
  */
 public class JMusicBot {
 
+    //Mongo NoSQL
+    private static final String NOSQL_HOST = "mongodb+srv://Haris:Theoharis@db2mongo.ddnmcb9.mongodb.net/?retryWrites=true&w=majority"; // Vul hier je MongoDB gegevens in. Iets met mongodb+srv://......
+    private static final String NOSQL_DATABASE = "fabBot"; // Vul hier je database gegevens in;
+
+
     public final static Logger LOG = LoggerFactory.getLogger(JMusicBot.class);
     public final static Permission[] RECOMMENDED_PERMS = {Permission.VOICE_DEAF_OTHERS, Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION, Permission.MANAGE_SERVER, Permission.BAN_MEMBERS,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
@@ -89,7 +94,9 @@ public class JMusicBot {
         if(!config.isValid())
             return;
         LOG.info("Loaded config from " + config.getConfigLocation());
-        
+
+
+
         // set up the listener
         EventWaiter waiter = new EventWaiter();
         SettingsManager settings = new SettingsManager();
@@ -230,4 +237,12 @@ public class JMusicBot {
             System.exit(1);
         }
     }
+    public static String getNosqlHost() {
+        return NOSQL_HOST;
+    }
+
+    public static String getNosqlDatabase() {
+        return NOSQL_DATABASE;
+    }
+
 }
