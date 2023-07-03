@@ -3,12 +3,15 @@ package com.jagrosh.jmusicbot.commands.music;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.MongoDB.MongoKiss;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 import java.io.File;
 
 public class KissCmd extends Command {
+
+    MongoKiss mongoKiss = new MongoKiss();
 
     public KissCmd(Bot bot) {
         this.name = "kiss";
@@ -24,7 +27,6 @@ public class KissCmd extends Command {
 
         File file;
 
-        int[] coloursEmbed;
 
         if (event.getAuthor().getName().equals("grasparkieten")) {
             file = new File("pictures/ezgif-5-abff46f119.gif");
@@ -55,11 +57,14 @@ public class KissCmd extends Command {
             embed2.setFooter("(ps: I am in your walls)", event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
 
 
+
             for (int i = 0; i < event.getGuild().getMembers().size(); i++) {
                 if (event.getGuild().getMembers().get(i).getUser().getName().equals(event.getArgs())) {
 
+                    mongoKiss.addOne(event.getAuthor().getId(), event.getGuild().getMembers().get(i).getUser().getId());
 
-                    if (event.getAuthor().getName().equals("starcarcass")) {
+
+                    if (event.getAuthor().getName().equals("starcarcass")){
                       colour = new Color(255, 188, 217);
                     }
                     else if (event.getAuthor().getName().equals("grasparkieten")){
@@ -70,7 +75,7 @@ public class KissCmd extends Command {
                     EmbedBuilder embed = new EmbedBuilder();
 
                     embed.setTitle("Special delivery from " + event.getAuthor().getName(), null);
-                    embed.setDescription("You've kissed this person:" + " " + "times");
+                    embed.setDescription("You've kissed this person: " + mongoKiss.getKissesTotal(event.getAuthor().getId(), event.getGuild().getMembers().get(i).getUser().getId()) + " times");
                     embed.addField(event.getAuthor().getName() + " kisses " + event.getArgs() + " <33", event.getGuild().getMembersByName(event.getArgs(), true).get(0).getAsMention(), false).setImage("attachment://" + file.getName());
                     embed.setColor(colour);
                     embed.setFooter("(ps: I am in your walls)", event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
@@ -84,8 +89,6 @@ public class KissCmd extends Command {
 
 
             event.getChannel().sendMessage(embed2.build()).addFile(file).queue();
-
-            //  event.getGuild().getTextChannelsByName(currentChannel, true).get(0).sendMessage(event.getAuthor().getAsMention() + " kisses " + event.getArgs() + " <33").addFile(file).queue();
 
         } catch (Exception e) {
             event.getGuild().getTextChannelsByName(currentChannel, true).get(0).sendMessage("Ehmmm.... Daar ging iets mis").queue();

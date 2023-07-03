@@ -89,7 +89,7 @@ public class JMusicBot {
     private static void startBot() {
         // create prompt to handle startup
         Prompt prompt = new Prompt("JMusicBot");
-        
+
         // startup checks
         OtherUtil.checkVersion(prompt);
         OtherUtil.checkJavaVersion(prompt);
