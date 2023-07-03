@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import net.dv8tion.jda.api.entities.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,24 +23,21 @@ public class PenisCmd extends Command {
 
         List<User> blacklistedUsers = new ArrayList();
 
-        blacklistedUsers.add(event.getGuild().getMembersByName("Ericbee", true).get(0).getUser());
         blacklistedUsers.add(event.getGuild().getMembersByName("JelskiGaming", true).get(0).getUser());
         blacklistedUsers.add(event.getGuild().getMembersByName("HonHonKandelaar", true).get(0).getUser());
-        blacklistedUsers.add(event.getGuild().getMembersByName("Lazorical", true).get(0).getUser());
+        blacklistedUsers.add(event.getGuild().getMembersByName("joannesmh", true).get(0).getUser());
 
-//
-//
 //        blacklistedUsers.add(event.getGuild().getMembersByName("Kevinović", true).get(0).getUser());
         blacklistedUsers.add(event.getGuild().getMembersByName("Martin Van der Kolk", true).get(0).getUser());
-        blacklistedUsers.add(event.getGuild().getMembersByName("StarCarcass", true).get(0).getUser());
-//        blacklistedUsers.add(event.getGuild().getMembersByName("Taro", true).get(0).getUser());
+//        blacklistedUsers.add(event.getGuild().getMembersByName("StarCarcass", true).get(0).getUser());
+//        blacklistedUsers.add(event.getGuild().getMembersByName("taro_bean", true).get(0).getUser());
 //        blacklistedUsers.add(event.getGuild().getMembersByName("Bennie", true).get(0).getUser());
 //        blacklistedUsers.add(event.getGuild().getMembersByName("Lavenderforlove", true).get(0).getUser());
-        blacklistedUsers.add(event.getGuild().getMembersByName("Mediolānum", true).get(0).getUser());
+        blacklistedUsers.add(event.getGuild().getMembersByName(".mediolanum", true).get(0).getUser());
 
         String message = event.getArgs();
 
-        if (event.getArgs() == null){
+        if (event.getArgs() == null) {
             message = "(noArgException)";
         }
 
@@ -55,8 +53,8 @@ public class PenisCmd extends Command {
                     System.out.println(event.getGuild().getMembers().get(i).getUser() + " blacklisted user or self");
                 } else {
                     String finalMessage = message;
-                    event.getGuild().getMembers().get(i).getUser().openPrivateChannel().queue(pc -> pc.sendMessage("This is a public announcement from the user: " + event.getAuthor().getName() + ". From the server: " + event.getGuild().getName() + "\n\n" +  finalMessage).queue());
-                //    event.getGuild().getMembers().get(i).getUser().openPrivateChannel().queue(pc -> pc.sendMessage(message2).queue());
+                    event.getGuild().getMembers().get(i).getUser().openPrivateChannel().queue(pc -> pc.sendMessage("This is a public announcement from the user: " + event.getAuthor().getName() + ". From the server: " + event.getGuild().getName() + "\n\n" + finalMessage).queue());
+                    //    event.getGuild().getMembers().get(i).getUser().openPrivateChannel().queue(pc -> pc.sendMessage(message2).queue());
 
                     System.out.println(event.getGuild().getMembers().get(i).getUser());
                 }

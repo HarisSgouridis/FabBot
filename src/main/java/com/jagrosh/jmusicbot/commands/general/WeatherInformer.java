@@ -10,10 +10,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.awt.*;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalTime;
@@ -38,6 +36,9 @@ public class WeatherInformer {
     private double minimumTemp = 0.123456789;
     private double maximumTemp = 0.123456789;
     private double biggestDayDiffrence;
+
+    File harisImage = new File("pictures/20230702_105241.jpg");
+    File bugi = new File("pictures/budgie-tennis-ball.gif");
 
 
     private static int counter = 0;
@@ -182,7 +183,5 @@ public class WeatherInformer {
     private void reloadMongoList() {
         this.mongoTemperatureInstance.load();
     }
-
-
 }
 

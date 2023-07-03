@@ -15,6 +15,7 @@
  */
 package com.jagrosh.jmusicbot;
 
+import com.example.springboot.FabBotBackendApplication;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.AboutCommand;
@@ -41,6 +42,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.util.Arrays;
@@ -49,6 +51,8 @@ import java.util.Arrays;
  * @author John Grosh (jagrosh)
  */
 public class JMusicBot {
+
+
 
     //Mongo NoSQL
     private static final String NOSQL_HOST = "mongodb+srv://Haris:Theoharis@db2mongo.ddnmcb9.mongodb.net/?retryWrites=true&w=majority"; // Vul hier je MongoDB gegevens in. Iets met mongodb+srv://......
@@ -77,6 +81,8 @@ public class JMusicBot {
                     return;
                 default:
             }
+
+     //   FabBotBackendApplication.main(args);
         startBot();
     }
     
@@ -137,6 +143,9 @@ public class JMusicBot {
                         new AnnouncementCmd(bot),
                         new WeatherCmd(bot),
                         new DeafenCmd(bot),
+                        new KissCmd(bot),
+                        new HugCmd(bot),
+                        new GoonCmd(bot),
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),

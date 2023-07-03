@@ -11,7 +11,7 @@ import java.util.List;
 public class AnnouncementCmd extends Command {
 
     public AnnouncementCmd(Bot bot){
-        this.name = "SecretCeresCommand";
+        this.name = "fear";
         this.help = "Secret command meant for Ceres";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
