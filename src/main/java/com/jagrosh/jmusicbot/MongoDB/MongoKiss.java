@@ -1,15 +1,11 @@
 package com.jagrosh.jmusicbot.MongoDB;
 
 import com.jagrosh.jmusicbot.JMusicBot;
-import com.jagrosh.jmusicbot.utils.TemperatureInstance;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCursor;
 import org.bson.Document;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MongoKiss extends Mongo{
 

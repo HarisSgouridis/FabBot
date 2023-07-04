@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.MongoDB.MongoKiss;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.io.File;
@@ -46,7 +47,16 @@ public class KissCmd extends Command {
 
         try {
 
-            Color colour = new Color(255,255,255);
+            Color colour = new Color(255, 255, 255);
+
+            if (event.getAuthor().getName().equals("starcarcass")) {
+                colour = new Color(255, 188, 217);
+            } else if (event.getAuthor().getName().equals("grasparkieten")) {
+                colour = new Color(255, 183, 197);
+            } else if (event.getAuthor().getName().equals("bearbennie")) {
+                colour = new Color(255, 16, 240);
+            }
+
 
             EmbedBuilder embed2 = new EmbedBuilder();
 
@@ -56,39 +66,32 @@ public class KissCmd extends Command {
             embed2.setColor(colour);
             embed2.setFooter("(ps: I am in your walls)", event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
 
+            if (event.getGuild().getMembersByName(event.getArgs(), true).size() > 0) {
+                User user = event.getGuild().getMembersByName(event.getArgs(), true).get(0).getUser();
 
-
-            for (int i = 0; i < event.getGuild().getMembers().size(); i++) {
-                if (event.getGuild().getMembers().get(i).getUser().getName().equals(event.getArgs())) {
-
-                    mongoKiss.addOne(event.getAuthor().getId(), event.getGuild().getMembers().get(i).getUser().getId());
-
-
-                    if (event.getAuthor().getName().equals("starcarcass")){
-                      colour = new Color(255, 188, 217);
-                    }
-                    else if (event.getAuthor().getName().equals("grasparkieten")){
-                        colour = new Color(255,183,197);
-                    }
-
-
-                    EmbedBuilder embed = new EmbedBuilder();
-
-                    embed.setTitle("Special delivery from " + event.getAuthor().getName(), null);
-                    embed.setDescription("You've kissed this person: " + mongoKiss.getKissesTotal(event.getAuthor().getId(), event.getGuild().getMembers().get(i).getUser().getId()) + " times");
-                    embed.addField(event.getAuthor().getName() + " kisses " + event.getArgs() + " <33", event.getGuild().getMembersByName(event.getArgs(), true).get(0).getAsMention(), false).setImage("attachment://" + file.getName());
-                    embed.setColor(colour);
-                    embed.setFooter("(ps: I am in your walls)", event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
-
-                    event.getChannel().sendMessage(embed.build()).addFile(file).queue();
+                if (user.equals(event.getAuthor())) {
+                    event.getGuild().getTextChannelsByName(currentChannel, true).get(0).sendMessage("Stop trying to kiss yourself you lonel shit, that's not what I made this command for. Love, -Haris <3333").queue();
                     return;
                 }
+
+                mongoKiss.addOne(event.getAuthor().getId(), event.getGuild().getMembersByName(event.getArgs(), true).get(0).getUser().getId());
+
+                EmbedBuilder embed = new EmbedBuilder();
+
+                embed.setTitle("Special delivery from " + event.getAuthor().getName(), null);
+                embed.setDescription("You've kissed this person: " + mongoKiss.getKissesTotal(event.getAuthor().getId(), event.getGuild().getMembersByName(event.getArgs(), true).get(0).getUser().getId()) + " times");
+                embed.addField(event.getAuthor().getName() + " kisses " + event.getArgs() + " <33", event.getGuild().getMembersByName(event.getArgs(), true).get(0).getAsMention(), false).setImage("attachment://" + file.getName());
+                embed.setColor(colour);
+                embed.setFooter("(ps: I am in your walls)", event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
+
+                event.getChannel().sendMessage(embed.build()).addFile(file).queue();
+                return;
+            } else {
+                System.out.println("attachment://" + file.getName());
+
+                event.getChannel().sendMessage(embed2.build()).addFile(file).queue();
             }
 
-            System.out.println("attachment://" + file.getName());
-
-
-            event.getChannel().sendMessage(embed2.build()).addFile(file).queue();
 
         } catch (Exception e) {
             event.getGuild().getTextChannelsByName(currentChannel, true).get(0).sendMessage("Ehmmm.... Daar ging iets mis").queue();
