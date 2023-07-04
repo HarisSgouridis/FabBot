@@ -70,7 +70,7 @@ public class KissCmd extends Command {
                 User user = event.getGuild().getMembersByName(event.getArgs(), true).get(0).getUser();
 
                 if (user.equals(event.getAuthor())) {
-                    event.getGuild().getTextChannelsByName(currentChannel, true).get(0).sendMessage("Stop trying to kiss yourself you lonel shit, that's not what I made this command for. Love, -Haris <3333").queue();
+                    event.getGuild().getTextChannelsByName(currentChannel, true).get(0).sendMessage("Stop trying to kiss yourself you lonely shit, that's not what I made this command for. Love, -Haris <3333").queue();
                     return;
                 }
 
