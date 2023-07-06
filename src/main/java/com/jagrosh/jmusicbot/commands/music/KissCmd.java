@@ -9,8 +9,23 @@ import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KissCmd extends Command {
+
+    String creepyHaris = "(Can I also give one as well?)";
+    String lovingHaris = "(<33333)";
+    String scaryHaris = "(ps: I am in your walls)";
+    String meanHaris = "(Are you sure you want to give it to someone like this?)";
+    String noRegrets = "(I have no regrets making this command lol)";
+    String devHaris = "(Follow your favourite Haris on GitHub!: \'https://github.com/HarisSgouridis\')";
+    String intent = "(This user means it!)";
+    String noIntent = "(This user is doesn't mean it lol)";
+    String noWay = "(Congratutions, There was a 1/1000 chance It would've been this text. Feel free to use this as a coupon for me to visit you and go in your walls.)";
+    String love = "(I love all you guys <3)";
+    String easterEgg = "(Fun fact: there is a piece of text that only appears once in around 1000 times.......)";
+
 
     MongoKiss mongoKiss = new MongoKiss();
 
@@ -23,6 +38,28 @@ public class KissCmd extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+
+        List<String> harisTextList = new ArrayList<>();
+
+        harisTextList.add(creepyHaris);
+        harisTextList.add(lovingHaris);
+        harisTextList.add(scaryHaris);
+        harisTextList.add(devHaris);
+        harisTextList.add(intent);
+        harisTextList.add(noIntent);
+        harisTextList.add(noRegrets);
+        harisTextList.add(meanHaris);
+        harisTextList.add(easterEgg);
+        harisTextList.add(love);
+
+
+        String roll = harisTextList.get((int) Math.round(Math.random() * 9));
+
+        int randomNumber = (int)Math.round(Math.random() * 1000);
+
+        if (randomNumber == 374){
+            roll = noWay;
+        }
 
         String currentChannel = event.getChannel().getName();
 
@@ -50,7 +87,7 @@ public class KissCmd extends Command {
             embed2.setTitle("Special delivery from " + event.getAuthor().getName(), null);
             embed2.addField(event.getAuthor().getName() + " kisses " + event.getArgs() + " <33", "", false).setImage("attachment://" + file.getName());
             embed2.setColor(colour);
-            embed2.setFooter("(ps: I am in your walls)", event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
+            embed2.setFooter(roll, event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
 
             if (!file1.exists()){
                 embed2.setDescription("You do not have a .gif set yet! (Use \"@FabBot savegif\" and add a .gif as an attachment to save your gif <333)");
@@ -69,10 +106,10 @@ public class KissCmd extends Command {
                 EmbedBuilder embed = new EmbedBuilder();
 
                 embed.setTitle("Special delivery from " + event.getAuthor().getName(), null);
-                embed.setDescription("You've kissed this person: " + mongoKiss.getKissesTotal(event.getAuthor().getId(), event.getGuild().getMembersByName(event.getArgs(), true).get(0).getUser().getId()) + " times");
+                embed.setDescription("You've kissed" +event.getArgs()+ ": " + mongoKiss.getKissesTotal(event.getAuthor().getId(), event.getGuild().getMembersByName(event.getArgs(), true).get(0).getUser().getId()) + " times");
                 embed.addField(event.getAuthor().getName() + " kisses " + event.getArgs() + " <33", event.getGuild().getMembersByName(event.getArgs(), true).get(0).getAsMention(), false).setImage("attachment://" + file.getName());
                 embed.setColor(colour);
-                embed.setFooter("(ps: I am in your walls)", event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
+                embed.setFooter(roll, event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
 
                 if (!file1.exists()){
                     embed.setDescription("You do not have a .gif set yet! (Use \"@FabBot savegif\" and add a .gif as an attachment to save your gif <333)");

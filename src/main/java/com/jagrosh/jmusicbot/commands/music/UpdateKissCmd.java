@@ -30,11 +30,10 @@ public class UpdateKissCmd extends Command {
 
                 mongoKiss.addOrUpdateGif(event.getAuthor().getId(), mongoKiss.readBytesFromFile(event.getMessage().getAttachments().get(0).downloadToFile().get()));
 
-                event.reply("I have saved your gif in my database <3");
+                event.reply("I have saved your .gif in my database <3");
             }
             else {
                 event.reply(event.getAuthor().getName() + "KRIJG DE HOERENTERING IK ZEI TOCH ALLEEN .GIF FILES??!!1!1!!");
-
             }
 
         } catch (InterruptedException e) {

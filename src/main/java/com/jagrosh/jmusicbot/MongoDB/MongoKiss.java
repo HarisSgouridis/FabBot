@@ -234,7 +234,7 @@ public void fromBinaryToGif(byte[] gifdata, String userId){
     }
 }
 
-public void changeColour(String[] colour, String targetId){
+public void changeColour(Object[] colour, String targetId){
     // Create a filter for the user ID and the "gifData" field
     Bson filter = and(eq("userId", targetId), exists("colour"));
 
