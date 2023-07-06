@@ -29,42 +29,32 @@ public class KissCmd extends Command {
         File file;
 
 
-        if (event.getAuthor().getName().equals("grasparkieten")) {
-            file = new File("pictures/ezgif-5-abff46f119.gif");
-        } else if (event.getAuthor().getName().equals("kevinovicc")) {
-            file = new File("pictures/KevinKiss.gif");
-        } else if (event.getAuthor().getName().equals("bearbennie")) {
-            file = new File("pictures/BennieKiss.gif");
-        } else if (event.getAuthor().getName().equals("starcarcass")) {
-            file = new File("pictures/CeresKiss.gif");
-        } else {
+      File file1 = new File("pictures/"+event.getAuthor().getId()+ ".gif");
 
-            event.getGuild().getTextChannelsByName(currentChannel, true).get(0).sendMessage("I could't find you in my collection :(. So here is Haris to serve as placeholder.").queue();
-
-
-            file = new File("pictures/ezgif-5-abff46f119.gif");
+        if (!file1.exists()){
+            file = new File("pictures/Pranked.gif");
+        }
+        else {
+            file = file1;
         }
 
         try {
 
             Color colour = new Color(255, 255, 255);
 
-            if (event.getAuthor().getName().equals("starcarcass")) {
-                colour = new Color(255, 188, 217);
-            } else if (event.getAuthor().getName().equals("grasparkieten")) {
-                colour = new Color(255, 183, 197);
-            } else if (event.getAuthor().getName().equals("bearbennie")) {
-                colour = new Color(255, 16, 240);
-            }
+
 
 
             EmbedBuilder embed2 = new EmbedBuilder();
 
             embed2.setTitle("Special delivery from " + event.getAuthor().getName(), null);
-            embed2.setDescription("You've kissed this person:" + " " + "times");
             embed2.addField(event.getAuthor().getName() + " kisses " + event.getArgs() + " <33", "", false).setImage("attachment://" + file.getName());
             embed2.setColor(colour);
             embed2.setFooter("(ps: I am in your walls)", event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
+
+            if (!file1.exists()){
+                embed2.setDescription("You do not have a .gif set yet! (Use \"@FabBot savegif\" and add a .gif as an attachment to save your gif <333)");
+            }
 
             if (event.getGuild().getMembersByName(event.getArgs(), true).size() > 0) {
                 User user = event.getGuild().getMembersByName(event.getArgs(), true).get(0).getUser();
@@ -83,6 +73,10 @@ public class KissCmd extends Command {
                 embed.addField(event.getAuthor().getName() + " kisses " + event.getArgs() + " <33", event.getGuild().getMembersByName(event.getArgs(), true).get(0).getAsMention(), false).setImage("attachment://" + file.getName());
                 embed.setColor(colour);
                 embed.setFooter("(ps: I am in your walls)", event.getGuild().getMembersByName("grasparkieten", true).get(0).getUser().getAvatarUrl());
+
+                if (!file1.exists()){
+                    embed.setDescription("You do not have a .gif set yet! (Use \"@FabBot savegif\" and add a .gif as an attachment to save your gif <333)");
+                }
 
                 event.getChannel().sendMessage(embed.build()).addFile(file).queue();
                 return;

@@ -139,11 +139,12 @@ public class WeatherInformer {
                         maximumTemp = temperature;
                     }
 
-                    for (int i = 1; i < jda.getGuilds().size(); i++) {
+                    for (int i = 0; i < jda.getGuilds().size(); i++) {
+
+                        System.out.println(jda.getGuilds().get(i));
+
 
                         try {
-
-
                             MessageHistory history = MessageHistory.getHistoryFromBeginning(jda.getGuilds().get(i).getTextChannelsByName("Weather-channel", true).get(0)).complete();
                             List<Message> mess = history.getRetrievedHistory();
                             for (Message m : mess) {
@@ -165,8 +166,12 @@ public class WeatherInformer {
                             TemperatureInstance temperatureInstance = new TemperatureInstance(location, time, temperature, winddirection, alarmtext, expectedWeather, kindOfWeather);
 
 
-                            mongoTemperatureInstance.add(temperatureInstance);
-                            reloadMongoList();
+                            if (i == jda.getGuilds().size() -1) {
+                                mongoTemperatureInstance.add(temperatureInstance);
+                                reloadMongoList();
+                            }
+
+
 
                         } catch (Exception e) {
                             e.printStackTrace();

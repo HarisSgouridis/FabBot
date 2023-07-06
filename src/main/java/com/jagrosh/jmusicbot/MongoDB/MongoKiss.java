@@ -5,10 +5,19 @@ import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.Binary;
 
-public class MongoKiss extends Mongo{
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 
+import static com.mongodb.client.model.Filters.*;
+
+public class MongoKiss extends Mongo {
 
 
     public MongoKiss() {
@@ -76,7 +85,33 @@ public class MongoKiss extends Mongo{
     }
 
 
-    public void addOne(String userId, String targetId){
+    public void addOne(String userId, String targetId) {
+
+
+//        String columnName = "userId";
+//        String columnValue = "292605993907650561";
+//
+//        // Create the query filter
+//        Document userDocument = collection.find(Filters.eq(columnName, columnValue)).first();
+//
+//        if (userDocument != null) {
+//            // Retrieve the gifData column value
+//            byte[] gifData = userDocument.get("gifData", Binary.class).getData();
+//
+//            fromBinaryToGif(gifData, columnValue);
+//
+//            // Perform further operations with the gifData, such as converting it back to a GIF file
+//
+//            System.out.println("gifData retrieved successfully.");
+//        } else {
+//            System.out.println("User not found.");
+//        }
+
+
+
+
+
+
         Document query1 = new Document("userId", userId);
 
         FindIterable<Document> result = collection.find(query1);
@@ -136,7 +171,109 @@ public class MongoKiss extends Mongo{
         }
     }
 
+    public byte[] readBytesFromFile(File file) {
+        try {
+
+            System.out.println(Files.readAllBytes(file.toPath()));
+
+
+                    // Create a document to store the GIF data
+
+            return Files.readAllBytes(file.toPath());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+public void addOrUpdateGif(String targetId, byte[] bytes){
+
+    // Create a filter for the user ID and the "gifData" field
+    Bson filter = and(eq("userId", targetId), exists("gifData"));
+
+    // Find the document matching the filter
+    Document document = collection.find(filter).first();
+
+
+    if (document != null) {
+        Document userFilter = new Document("userId", targetId);
+        Document update = new Document("$set", new Document("gifData", bytes));
+
+        collection.updateOne(userFilter, update);
+
+        fromBinaryToGif(bytes, targetId);
+
+    } else {
+
+        Document userFilter = new Document("userId", targetId);
+        Document update = new Document("$set", new Document("gifData", bytes));
+
+        collection.updateOne(userFilter, update);
+
+        fromBinaryToGif(bytes, targetId);
+
+        System.out.println("The 'gifData' field does not exist in the document for user ID: " + targetId);
+    }
+
+}
+
+public void fromBinaryToGif(byte[] gifdata, String userId){
+
+    String filePath = "C:\\Users\\theoh\\IdeaProjects\\MusicBot\\pictures\\"+userId+".gif";
+
+    try {
+        // Write the binary data to the file
+        FileOutputStream outputStream = new FileOutputStream(filePath);
+        outputStream.write(gifdata);
+        outputStream.close();
+
+        System.out.println("GIF file created successfully.");
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+public void changeColour(String[] colour, String targetId){
+    // Create a filter for the user ID and the "gifData" field
+    Bson filter = and(eq("userId", targetId), exists("colour"));
+
+    // Find the document matching the filter
+    Document document = collection.find(filter).first();
+
+
+    if (document != null) {
+        Document userFilter = new Document("userId", targetId);
+        Document update = new Document("$set", new Document("colour", colour));
+
+        collection.updateOne(userFilter, update);
+
+    } else {
+
+        Document userFilter = new Document("userId", targetId);
+        Document update = new Document("$set", new Document("colour", colour));
+
+        collection.updateOne(userFilter, update);
+
+
+        System.out.println("The 'colour' field does not exist in the document for user ID: " + targetId);
+    }
+
+}
+
+public String getColour(String userId){
+    Document userDocument = collection.find(Filters.eq("userId", userId)).first();
+
+    // Retrieve the color value from the document
+    String colour = null;
+    if (userDocument != null) {
+        colour = userDocument.getString("color");
+        return colour;
+    }
+    return colour;
+}
 
 
 
 }
+

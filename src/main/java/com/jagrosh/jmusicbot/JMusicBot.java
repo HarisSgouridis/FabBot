@@ -23,6 +23,7 @@ import com.jagrosh.jdautilities.examples.command.PingCommand;
 import com.jagrosh.jmusicbot.commands.admin.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.SettingsCmd;
+import com.jagrosh.jmusicbot.commands.general.SlashCommandListener;
 import com.jagrosh.jmusicbot.commands.general.WeatherInformer;
 import com.jagrosh.jmusicbot.commands.music.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
@@ -37,6 +38,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
@@ -107,14 +110,19 @@ public class JMusicBot {
         EventWaiter waiter = new EventWaiter();
         SettingsManager settings = new SettingsManager();
         Bot bot = new Bot(waiter, config, settings);
-        
+
+
         AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
                                 "Sometimes I cry when I touch myself",
                                 new String[]{"Holy fuck, I'm cumming!, Louis ahhhh, ahhhhhhhh"},
                                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
-        
+
+
+//        CommandData commandData = new CommandData("savegif", "Save a GIF")
+//                .addOption(OptionType.STRING, "file", "The GIF file", true);
+
         // set up the command client
         CommandClientBuilder cb = new CommandClientBuilder()
                 .setPrefix(config.getPrefix())
@@ -146,6 +154,8 @@ public class JMusicBot {
                         new KissCmd(bot),
                         new HugCmd(bot),
                         new GoonCmd(bot),
+                        new UpdateKissCmd(bot),
+                        new UpdateColourCmd(bot),
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),
@@ -218,15 +228,18 @@ public class JMusicBot {
             bot.setJDA(jda);
 
 
+            SlashCommandListener slashCommandListener = new SlashCommandListener();
+            bot.getJDA().addEventListener(slashCommandListener);
+
+            CommandData saveGifCommand = new CommandData("savegif", "Save a GIF attachment")
+                    .addOption(OptionType.STRING, "file", "The GIF file to save", false);
+
+            jda.upsertCommand(saveGifCommand).queue();
+
+
             Message getTrolledLol = new CustomHarisMessage();
-
             MessageReceivedEvent messageReceivedEvent = new MessageReceivedEvent(bot.getJDA(), 20, getTrolledLol);
-
-
             WeatherInformer weatherInformer = new WeatherInformer(bot);
-
-
-
             weatherInformer.execute(messageReceivedEvent, jda);
 
 
@@ -246,6 +259,8 @@ public class JMusicBot {
             System.exit(1);
         }
     }
+
+
     public static String getNosqlHost() {
         return NOSQL_HOST;
     }
