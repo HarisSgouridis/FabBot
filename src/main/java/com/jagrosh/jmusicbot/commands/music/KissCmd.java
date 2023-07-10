@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,8 +151,34 @@ public class KissCmd extends Command {
         }
         finally {
 
+            // Close any open streams or file handles
+            // Here, we assume that you have an InputStream or OutputStream that you want to close
+            InputStream inputStream = null;
+            try {
+                inputStream = new FileInputStream(file1);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            // Use the inputStream as needed
+
+            // Close the inputStream
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
+            try {
+                Files.deleteIfExists(
+                        Paths.get("pictures/"+event.getAuthor().getId()+ ".gif"));
+            }
+            catch (NoSuchFileException e) {
+                System.out.println(
+                        "No such file/directory exists");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
         }
