@@ -20,11 +20,14 @@ public class WeatherCmd extends Command {
     public String expectedWeather;
     public String kindOfWeather;
 
+    public Bot bot;
+
 
     public WeatherCmd(Bot bot) {
         this.name = "getWeather";
         this.help = "weather?";
         this.aliases = bot.getConfig().getAliases(this.name);
+        this.bot = bot;
     }
 
 
@@ -72,6 +75,8 @@ public class WeatherCmd extends Command {
     @Override
     protected void execute(CommandEvent event) {
         try {
+
+
             // channelToTest.sendMessage(this.getWebsite(event.getArgs()));
 
             String rawJson = this.getWebsite("https://weerlive.nl/api/json-data-10min.php?key=078bf26a41&locatie=" + event.getArgs());

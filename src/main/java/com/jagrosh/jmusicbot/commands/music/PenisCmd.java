@@ -31,7 +31,7 @@ public class PenisCmd extends Command {
         blacklistedUsers.add(event.getGuild().getMembersByName("Martin Van der Kolk", true).get(0).getUser());
 //        blacklistedUsers.add(event.getGuild().getMembersByName("StarCarcass", true).get(0).getUser());
 //        blacklistedUsers.add(event.getGuild().getMembersByName("taro_bean", true).get(0).getUser());
-//        blacklistedUsers.add(event.getGuild().getMembersByName("Bennie", true).get(0).getUser());
+//        blacklistedUsers.add(event.getGuild().getMembersByName("bearbennie", true).get(0).getUser());
 //        blacklistedUsers.add(event.getGuild().getMembersByName("Lavenderforlove", true).get(0).getUser());
         blacklistedUsers.add(event.getGuild().getMembersByName(".mediolanum", true).get(0).getUser());
 

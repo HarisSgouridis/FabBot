@@ -12,7 +12,7 @@ public class UpdateColourCmd extends Command {
 
     public UpdateColourCmd(Bot bot) {
         this.name = "savecolour";
-        this.help = "saves your gif";
+        this.help = "saves your colour";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
 
@@ -22,8 +22,21 @@ public class UpdateColourCmd extends Command {
         String[] colorValues = event.getArgs().split(",");
 
 
+        int red = Integer.valueOf(colorValues[0]);
+        int green = Integer.valueOf(colorValues[1]);
+        int blue = Integer.valueOf(colorValues[2]);
 
-            mongoKiss.changeColour(colorValues, event.getAuthor().getId());
+
+        Integer[] rgbColours = {red, green, blue};
+
+
+        try {
+            mongoKiss.changeColour(rgbColours, event.getAuthor().getId());
+            event.reply("Your colour values have been succesfully added to my database <3");
+        } catch (Exception e) {
+            event.reply("Welll.......... Something went wrong here");
+            e.printStackTrace();
         }
+    }
     }
 

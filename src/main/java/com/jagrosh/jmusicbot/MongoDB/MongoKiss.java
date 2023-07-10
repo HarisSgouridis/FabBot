@@ -1,12 +1,20 @@
 package com.jagrosh.jmusicbot.MongoDB;
 
 import com.jagrosh.jmusicbot.JMusicBot;
+import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
+import org.bson.BsonReader;
+import org.bson.BsonWriter;
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecProvider;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.Binary;
 
@@ -14,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 import static com.mongodb.client.model.Filters.*;
 
@@ -24,6 +33,7 @@ public class MongoKiss extends Mongo {
 
         connect();
         load();
+        registerCodecs();
     }
 
 
@@ -59,80 +69,30 @@ public class MongoKiss extends Mongo {
         // Selecteer de juiste collecton in de NoSQL server
         this.selectedCollection("kissManager");
 
-        // Haal alles op uit deze collection en loop er 1 voor 1 doorheen
-        MongoCursor<Document> cursor = collection.find().iterator();
-        try {
-            // Zolang er data is
-//            while (cursor.hasNext()) {
-//                // warning Java is case sensitive
-//                // Haal alle velden per record
-//                Document tempReiziger = cursor.next();
-//                String location = (String) tempReiziger.get("location");
-//                String time = (String) tempReiziger.get("time");
-//                double temperature = Double.valueOf(tempReiziger.get("temperature").toString());
-//                String winddirection = (String) tempReiziger.get("winddirection");
-//                String alarmtext = (String) tempReiziger.get("alarmtext");
-//                String expectedWeather = (String) tempReiziger.get("alarmtext");
-//                String kindOfWeather = (String) tempReiziger.get("kindOfWeather");
-//
-//
-//
-//            }
-        } finally {
-            // Sluit de stream
-            cursor.close();
-        }
     }
 
 
     public void addOne(String userId, String targetId) {
-
-
-//        String columnName = "userId";
-//        String columnValue = "292605993907650561";
-//
-//        // Create the query filter
-//        Document userDocument = collection.find(Filters.eq(columnName, columnValue)).first();
-//
-//        if (userDocument != null) {
-//            // Retrieve the gifData column value
-//            byte[] gifData = userDocument.get("gifData", Binary.class).getData();
-//
-//            fromBinaryToGif(gifData, columnValue);
-//
-//            // Perform further operations with the gifData, such as converting it back to a GIF file
-//
-//            System.out.println("gifData retrieved successfully.");
-//        } else {
-//            System.out.println("User not found.");
-//        }
-
-
-
-
-
 
         Document query1 = new Document("userId", userId);
 
         FindIterable<Document> result = collection.find(query1);
         boolean exists = result.iterator().hasNext();
 
-        if (!exists){
+        if (!exists) {
             Document document = new Document("userId", userId).append(targetId, 1);
             collection.insertOne(document);
-        }
-        else {
+        } else {
 
             Document query2 = new Document("userId", userId)
                     .append(targetId, new Document("$exists", true));
             Document document = collection.find(query2).first();
 
 
-            if (document != null){
+            if (document != null) {
                 Document update = new Document("$inc", new Document(targetId, 1));
                 collection.updateOne(query1, update);
-            }
-            else {
+            } else {
                 Document document1 = collection.find(new Document("userId", userId)).first();
 
                 if (document1 != null && document1.containsKey(targetId)) {
@@ -146,7 +106,6 @@ public class MongoKiss extends Mongo {
                     // Execute the update operation if the userId field doesn't exist for the document
                     collection.updateOne(query, update);
 
-
                 } else {
                     Document update = new Document("$inc", new Document(targetId, 1));
                     collection.updateOne(query1, update);
@@ -157,7 +116,7 @@ public class MongoKiss extends Mongo {
     }
 
 
-    public int getKissesTotal(String userId, String targetId){
+    public int getKissesTotal(String userId, String targetId) {
 
         Document document = collection.find(new Document("userId", userId)).first();
 
@@ -177,7 +136,7 @@ public class MongoKiss extends Mongo {
             System.out.println(Files.readAllBytes(file.toPath()));
 
 
-                    // Create a document to store the GIF data
+            // Create a document to store the GIF data
 
             return Files.readAllBytes(file.toPath());
 
@@ -187,93 +146,166 @@ public class MongoKiss extends Mongo {
         return null;
     }
 
-public void addOrUpdateGif(String targetId, byte[] bytes){
 
-    // Create a filter for the user ID and the "gifData" field
-    Bson filter = and(eq("userId", targetId), exists("gifData"));
+    public Binary getGifData(String targetId) {
+        // Create a filter for the user ID and the "gifData" field
+        Bson filter = and(eq("userId", targetId), exists("gifData"));
 
-    // Find the document matching the filter
-    Document document = collection.find(filter).first();
+        // Find the document matching the filter
+        Document document = collection.find(filter).first();
+
+        if (document != null) {
+            Binary gifData = document.get("gifData", Binary.class);
+
+            if (gifData != null) {
+                byte[] gifBytes = gifData.getData();
+
+                // Perform further operations with the gifData, such as converting it to a GIF file
+
+                System.out.println("gifData retrieved successfully.");
+
+                fromBinaryToGif(gifBytes, targetId);
 
 
-    if (document != null) {
-        Document userFilter = new Document("userId", targetId);
-        Document update = new Document("$set", new Document("gifData", bytes));
-
-        collection.updateOne(userFilter, update);
-
-        fromBinaryToGif(bytes, targetId);
-
-    } else {
-
-        Document userFilter = new Document("userId", targetId);
-        Document update = new Document("$set", new Document("gifData", bytes));
-
-        collection.updateOne(userFilter, update);
-
-        fromBinaryToGif(bytes, targetId);
-
-        System.out.println("The 'gifData' field does not exist in the document for user ID: " + targetId);
+                return gifData;
+            } else {
+                System.out.println("gifData is null.");
+            }
+        } else {
+            System.out.println("User not found.");
+        }
+        return null;
     }
 
-}
+    public void addOrUpdateGif(String targetId, byte[] bytes) {
 
-public void fromBinaryToGif(byte[] gifdata, String userId){
+        // Create a filter for the user ID and the "gifData" field
+        Bson filter = and(eq("userId", targetId), exists("gifData"));
 
-    String filePath = "C:\\Users\\theoh\\IdeaProjects\\MusicBot\\pictures\\"+userId+".gif";
-
-    try {
-        // Write the binary data to the file
-        FileOutputStream outputStream = new FileOutputStream(filePath);
-        outputStream.write(gifdata);
-        outputStream.close();
-
-        System.out.println("GIF file created successfully.");
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
-public void changeColour(Object[] colour, String targetId){
-    // Create a filter for the user ID and the "gifData" field
-    Bson filter = and(eq("userId", targetId), exists("colour"));
-
-    // Find the document matching the filter
-    Document document = collection.find(filter).first();
+        // Find the document matching the filter
+        Document document = collection.find(filter).first();
 
 
-    if (document != null) {
-        Document userFilter = new Document("userId", targetId);
-        Document update = new Document("$set", new Document("colour", colour));
+        if (document != null) {
+            Document userFilter = new Document("userId", targetId);
+            Document update = new Document("$set", new Document("gifData", bytes));
 
-        collection.updateOne(userFilter, update);
+            collection.updateOne(userFilter, update);
 
-    } else {
+            fromBinaryToGif(bytes, targetId);
 
-        Document userFilter = new Document("userId", targetId);
-        Document update = new Document("$set", new Document("colour", colour));
+        } else {
 
-        collection.updateOne(userFilter, update);
+            Document userFilter = new Document("userId", targetId);
+            Document update = new Document("$set", new Document("gifData", bytes));
 
+            collection.updateOne(userFilter, update);
 
-        System.out.println("The 'colour' field does not exist in the document for user ID: " + targetId);
+            fromBinaryToGif(bytes, targetId);
+
+            System.out.println("The 'gifData' field does not exist in the document for user ID: " + targetId);
+        }
+
     }
 
-}
+    public void fromBinaryToGif(byte[] gifdata, String userId) {
 
-public String getColour(String userId){
-    Document userDocument = collection.find(Filters.eq("userId", userId)).first();
+        String filePath = "C:\\Users\\theoh\\IdeaProjects\\MusicBot\\pictures\\" + userId + ".gif";
 
-    // Retrieve the color value from the document
-    String colour = null;
-    if (userDocument != null) {
-        colour = userDocument.getString("color");
-        return colour;
+        try {
+            // Write the binary data to the file
+            FileOutputStream outputStream = new FileOutputStream(filePath);
+            outputStream.write(gifdata);
+            outputStream.close();
+
+            System.out.println("GIF file created successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    return colour;
-}
+
+    public void changeColour(Integer[] colour, String targetId) {
+        // Create a filter for the user ID and the "colour" field
+        Bson filter = and(eq("userId", targetId), exists("colour"));
+
+        // Find the document matching the filter
+        Document document = collection.find(filter).first();
+
+        if (document != null) {
+            Document userFilter = new Document("userId", targetId);
+            Document update = new Document("$set", new Document("colour", colour));
+
+            collection.updateOne(userFilter, update);
+        } else {
+            Document userFilter = new Document("userId", targetId);
+
+            Document update = new Document("$set", new Document("colour", colour));
+
+            collection.updateOne(userFilter, update);
+
+            System.out.println("The 'colour' field does not exist in the document for user ID: " + targetId);
+        }
+    }
+
+    public Integer[] getColour(String userId) {
+        Document userDocument = collection.find(Filters.eq("userId", userId)).first();
+
+        // Retrieve the color value from the document
+        List<Integer> colourList = userDocument.get("colour", List.class);
+        if (colourList != null) {
+            Integer[] colour = colourList.toArray(new Integer[0]);
+            return colour;
+        }
+        else{
+            return new Integer[]{255, 255,255};
+        }
+    }
+
+    private void registerCodecs() {
+        CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
+                CodecRegistries.fromProviders(new RGBArrayCodecProvider()),
+                MongoClient.getDefaultCodecRegistry()
+        );
+        collection = collection.withCodecRegistry(codecRegistry);
+    }
+
+    private static class RGBArrayCodec implements Codec<Integer[]> {
+
+        @Override
+        public Integer[] decode(BsonReader reader, DecoderContext decoderContext) {
+            reader.readStartArray();
+            Integer[] rgbArray = new Integer[3];
+            for (int i = 0; i < 3; i++) {
+                rgbArray[i] = reader.readInt32();
+            }
+            reader.readEndArray();
+            return rgbArray;
+        }
 
 
+        @Override
+        public void encode(BsonWriter writer, Integer[] rgbArray, EncoderContext encoderContext) {
+            writer.writeStartArray();
+            for (int value : rgbArray) {
+                writer.writeInt32(value);
+            }
+            writer.writeEndArray();
+        }
 
+        @Override
+        public Class<Integer[]> getEncoderClass() {
+            return Integer[].class;
+        }
+    }
+
+    private static class RGBArrayCodecProvider implements CodecProvider {
+        @Override
+        public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
+            if (clazz.isArray() && clazz.getComponentType().equals(Integer.class)) {
+                return (Codec<T>) new RGBArrayCodec();
+            }
+            return null;
+        }
+    }
 }
 

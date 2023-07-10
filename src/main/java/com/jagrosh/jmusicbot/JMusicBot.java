@@ -25,6 +25,7 @@ import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.SettingsCmd;
 import com.jagrosh.jmusicbot.commands.general.SlashCommandListener;
 import com.jagrosh.jmusicbot.commands.general.WeatherInformer;
+import com.jagrosh.jmusicbot.commands.general.WormholeCmd;
 import com.jagrosh.jmusicbot.commands.music.*;
 import com.jagrosh.jmusicbot.commands.owner.*;
 import com.jagrosh.jmusicbot.entities.Prompt;
@@ -156,6 +157,7 @@ public class JMusicBot {
                         new GoonCmd(bot),
                         new UpdateKissCmd(bot),
                         new UpdateColourCmd(bot),
+                        new WormholeCmd(bot),
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),

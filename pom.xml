@@ -8,6 +8,11 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>dv8tion</id>
             <name>m2-dv8tion</name>
             <url>https://m2.dv8tion.net/releases</url>
@@ -30,6 +35,11 @@
             <name>Maven Central</name>
             <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
+        <repository>
+            <id>jcenter</id>
+            <name>JCenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -43,8 +53,10 @@
             <groupId>com.jagrosh</groupId>
             <artifactId>jda-utilities</artifactId>
             <version>3.0.5</version>
+            <scope>compile</scope>
             <type>pom</type>
         </dependency>
+
 
         <!-- Music Dependencies -->
         <!-- using a fork of this to fix some issues faster -->
@@ -84,12 +96,12 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>3.12.2</version>
+            <version>3.12.12</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.15.3</version>
+            <version>1.15.4</version>
         </dependency>
 
         <!-- Testing Dependencies -->

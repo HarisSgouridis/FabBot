@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -37,11 +36,6 @@ public class WeatherInformer {
     private double maximumTemp = 0.123456789;
     private double biggestDayDiffrence;
 
-    File harisImage = new File("pictures/20230702_105241.jpg");
-    File bugi = new File("pictures/budgie-tennis-ball.gif");
-
-
-    private static int counter = 0;
 
     public WeatherInformer(Bot bot) {
         mongoTemperatureInstance = new MongoTemperatureInstance();
@@ -76,7 +70,6 @@ public class WeatherInformer {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(jsonString);
 
-
             this.temperature = (rootNode.path("temp").asDouble());
             this.time = (rootNode.path("time").asText());
             this.location = (rootNode.path("plaats").asText());
@@ -85,15 +78,12 @@ public class WeatherInformer {
             this.expectedWeather = (rootNode.path("verw").asText());
             this.kindOfWeather = (rootNode.path("samenv").asText());
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
     public void execute(MessageReceivedEvent event, JDA jda) {
-
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -108,13 +98,16 @@ public class WeatherInformer {
                     maximumTemp = temperature;
 
                     System.out.println("Reset the values succesfully!");
+
+                    File file = new File("pictures");
+                    File[] files = file.listFiles();
+                    for(File f: files){
+                        f.delete();
+                    }
+
                 }
 
                 if ((minute == 14 || minute == 24 || minute == 34 || minute == 44 || minute == 54 || minute == 4) && second <= 5) {
-
-                    System.out.println("Time is right!");
-                    System.out.println(minute);
-                    System.out.println(second);
 
                     biggestDayDiffrence = maximumTemp - minimumTemp;
 
@@ -140,8 +133,6 @@ public class WeatherInformer {
                     }
 
                     for (int i = 0; i < jda.getGuilds().size(); i++) {
-
-                        System.out.println(jda.getGuilds().get(i));
 
 
                         try {
