@@ -9,9 +9,6 @@ import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,14 +84,12 @@ public class KissCmd extends Command {
             event.reply("You were <=50 off out of 1000 to unlocking it!");
         }
 
-
         try {
             if (event.getGuild().getMembersByName(event.getArgs(), true).size() > 0) {
                 mongoKiss.addOne(event.getAuthor().getId(), event.getGuild().getMembersByName(event.getArgs(), true).get(0).getUser().getId());
             }
-
+            
             Integer[] rgbValues = mongoKiss.getColour(event.getAuthor().getId());
-
 
             Color colour = new Color(rgbValues[0], rgbValues[1], rgbValues[2]);
        //     colour = null;
@@ -138,47 +133,41 @@ public class KissCmd extends Command {
                 event.getChannel().sendMessage(embed2.build()).addFile(file).queue();
             }
 
-            boolean deleted = file1.delete();
-
-            if (deleted == false){
-                event.reply("File didn't get deleted properly!!");
-            }
-
         } catch (Exception e) {
             event.getGuild().getTextChannelsByName(currentChannel, true).get(0).sendMessage("Ehmmm.... Daar ging iets mis").queue();
 
             e.printStackTrace();
         }
         finally {
-
-            // Close any open streams or file handles
-            // Here, we assume that you have an InputStream or OutputStream that you want to close
-            InputStream inputStream = null;
-            try {
-                inputStream = new FileInputStream(file1);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            // Use the inputStream as needed
-
-            // Close the inputStream
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            try {
-                Files.deleteIfExists(
-                        Paths.get("pictures/"+event.getAuthor().getId()+ ".gif"));
-            }
-            catch (NoSuchFileException e) {
-                System.out.println(
-                        "No such file/directory exists");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//
+//            // Close any open streams or file handles
+//            // Here, we assume that you have an InputStream or OutputStream that you want to close
+//            InputStream inputStream = null;
+//            try {
+//                inputStream = new FileInputStream(file1);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            // Use the inputStream as needed
+//
+//            // Close the inputStream
+//            try {
+//                inputStream.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//            try {
+//                Files.deleteIfExists(
+//                        Paths.get("pictures/"+event.getAuthor().getId()+ ".gif"));
+//            }
+//            catch (NoSuchFileException e) {
+//                System.out.println(
+//                        "No such file/directory exists");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
 
         }

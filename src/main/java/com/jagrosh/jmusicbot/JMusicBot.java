@@ -241,8 +241,11 @@ public class JMusicBot {
 
             Message getTrolledLol = new CustomHarisMessage();
             MessageReceivedEvent messageReceivedEvent = new MessageReceivedEvent(bot.getJDA(), 20, getTrolledLol);
-            WeatherInformer weatherInformer = new WeatherInformer(bot);
-            weatherInformer.execute(messageReceivedEvent, jda);
+
+            if (bot.getJDA().getTextChannelsByName("weather-channel", true).size() > 0){
+                WeatherInformer weatherInformer = new WeatherInformer(bot);
+                weatherInformer.execute(messageReceivedEvent, jda);
+            }
 
 
 
