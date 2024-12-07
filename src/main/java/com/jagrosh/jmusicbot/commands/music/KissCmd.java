@@ -1,16 +1,17 @@
 package com.jagrosh.jmusicbot.commands.music;
 
+import java.awt.Color;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.MongoDB.MongoKiss;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-
-import java.awt.*;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class KissCmd extends Command {
 
@@ -22,9 +23,7 @@ public class KissCmd extends Command {
     String devHaris = "(Follow your favourite Haris on GitHub!: \'https://github.com/HarisSgouridis\')";
     String intent = "(ps: I am in your walls)";
     String noIntent = "(ps: I am in your walls)";
-    String noWay = "(Holy shit you actually did it. This is the 1/1000 easter egg, Haris half stripping in drip. " +
-            "We did the voting and this is what I had to do, but I could've never expected it to actually show here one day...." +
-            "Help guess I have to explain myself now lol)";
+    String noWay = "(I should've made this bot in Golang ffs)";
     String love = "(I love all you guys <3)";
     String easterEgg = "(Fun fact: there is a secret easter egg that activates with a 1/1000 chance. I filmed myself doing what the most popular vote was. Wonder which day will be the day it will show and I'll hang myself lol)";
 

@@ -1,11 +1,11 @@
 package com.jagrosh.jmusicbot.MongoDB;
 
-import com.jagrosh.jmusicbot.JMusicBot;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.model.Filters;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
+
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -18,13 +18,15 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.Binary;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.List;
-
-import static com.mongodb.client.model.Filters.*;
+import com.jagrosh.jmusicbot.JMusicBot;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.model.Filters;
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.exists;
 
 public class MongoKiss extends Mongo {
 
@@ -185,7 +187,6 @@ public class MongoKiss extends Mongo {
         // Find the document matching the filter
         Document document = collection.find(filter).first();
 
-
         if (document != null) {
             Document userFilter = new Document("userId", targetId);
             Document update = new Document("$set", new Document("gifData", bytes));
@@ -195,29 +196,22 @@ public class MongoKiss extends Mongo {
             fromBinaryToGif(bytes, targetId);
 
         } else {
-
-            Document userFilter = new Document("userId", targetId);
-            Document update = new Document("$set", new Document("gifData", bytes));
-
-            collection.updateOne(userFilter, update);
+            Document newDocument = new Document("userId", targetId).append("gifData", bytes);
+            collection.insertOne(newDocument);
 
             fromBinaryToGif(bytes, targetId);
 
-            System.out.println("The 'gifData' field does not exist in the document for user ID: " + targetId);
+            System.out.println("The 'gifData' field did not exist. Created a new document for user ID: " + targetId);
         }
 
     }
 
     public void fromBinaryToGif(byte[] gifdata, String userId) {
 
-        String filePath = "C:\\Users\\theoh\\IdeaProjects\\MusicBot\\pictures\\" + userId + ".gif";
-
-        try {
-            // Write the binary data to the file
-            FileOutputStream outputStream = new FileOutputStream(filePath);
+        String filePath = "/home/theoharis/Downloads/FabBot/pictures/" + userId + ".gif";
+        // Write the binary data to the file
+        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
             outputStream.write(gifdata);
-            outputStream.close();
-
             System.out.println("GIF file created successfully.");
         } catch (IOException e) {
             e.printStackTrace();

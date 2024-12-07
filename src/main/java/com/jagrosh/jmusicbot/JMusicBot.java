@@ -15,7 +15,7 @@
  */
 package com.jagrosh.jmusicbot;
 
-import com.example.springboot.FabBotBackendApplication;
+// import com.example.springboot.FabBotBackendApplication;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.AboutCommand;
